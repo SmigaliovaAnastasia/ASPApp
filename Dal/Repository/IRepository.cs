@@ -2,16 +2,16 @@
 
 namespace ASPApp.Dal.Repository
 {
-    internal interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class
     {
-        List<T>? GetAll();
-        T? GetById(params object[] id);
-        void Add(T entity);
+        Task<IEnumerable<T>?> GetAllAsync();
+        Task<T?> GetByIdAsync(params object[] id);
+        Task AddAsync(T entity);
         void Remove(T entity);
-        void Remove(params object[] id);
+        Task RemoveAsync(params object[] id);
         void Update(T entity);
-        void Update(params object[] id);
-        void Save();
-        public IEnumerable<T> GetWithInclude(params Expression<Func<T, object>>[] includeProperties);
+        Task UpdateAsync(params object[] id);
+        Task SaveChangesAsync();
+        Task<IEnumerable<T>> GetWithIncludeAsync(params Expression<Func<T, object>>[] includeProperties);
     }
 }

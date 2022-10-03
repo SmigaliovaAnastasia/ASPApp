@@ -11,29 +11,30 @@ namespace ASPApp.Dal.Repository
         {
             _context = context;
         }
-        public void Add(T? entity)
+        public async Task AddAsync(T? entity)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException();
             }
 
-            _context.Set<T>().Add(entity);
+            await _context.Set<T>().AddAsync(entity);
         }
 
-        public T? GetById(params Object[] id)
+        public async Task<T?> GetByIdAsync(params Object[] id)
         {
-            return _context.Set<T>().Find(id);
+            return await _context.Set<T>().FindAsync(id);
         }
 
-        public List<T>? GetAll()
+        public async Task<IEnumerable<T>?> GetAllAsync()
         {
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().ToListAsync();
         }
-        public IEnumerable<T> GetWithInclude(params Expression<Func<T, object>>[] includeProperties)
+        public async Task<IEnumerable<T>> GetWithIncludeAsync(params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = _context.Set<T>();
-            return includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty)).ToList();
+            includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty)).ToList();
+            return await query.ToListAsync();
         }
 
         public void Remove(T? entity)
@@ -42,18 +43,19 @@ namespace ASPApp.Dal.Repository
             {
                 throw new ArgumentNullException();
             }
+
             _context.Set<T>().Remove(entity);
         }
 
-        public void Remove(params object[] id)
+        public async Task RemoveAsync(params object[] id)
         {
-            var entity = GetById(id);
+            var entity = await GetByIdAsync(id);
             Remove(entity);
         }
 
-        public void Save()
+        public async Task SaveChangesAsync()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public void Update(T? entity)
@@ -65,9 +67,9 @@ namespace ASPApp.Dal.Repository
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public void Update(params object[] id)
+        public async Task UpdateAsync(params object[] id)
         {
-            var entity = GetById(id);
+            var entity = await GetByIdAsync(id);
             Update(entity);
         }
     }
