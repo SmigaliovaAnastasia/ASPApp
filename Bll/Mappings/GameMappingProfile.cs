@@ -11,6 +11,8 @@ namespace ASPApp.Bll.Mappings
         {
             CreateMap<Game, GameDto>();
             CreateMap<GameDto, Game>();
+            CreateMap<GameUpdateDto, Game>();
+            CreateMap<Game, GameUpdateDto>();
         }
     }
 }

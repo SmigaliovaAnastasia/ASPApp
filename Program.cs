@@ -6,6 +6,7 @@ using static ASPApp.WebAPI.Extensions.MiddlewareExtensions;
 using ASPApp.WebAPI.Controllers;
 using ASPApp.Bll.Services;
 using ASPApp.Bll.Mappings;
+using ASPApp.Domain.Entities;
 //app.MapGameDtoEndpoints();
 namespace ASPApp;
 
@@ -26,7 +27,7 @@ public class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("BoardGameApp")));
 
         builder.Services.AddAutoMapper(typeof(GameMappingProfile));
-        builder.Services.AddControllers();
+        builder.Services.AddScoped<DbContext, GameContext>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(GameRepository<>));
         builder.Services.AddScoped<IGameService, GameService>();
 
@@ -43,7 +44,7 @@ public class Program
 
         app.UseExceptionHandler("/Error");
 
-        app.UseCustomErrorMiddleware();
+        //app.UseCustomErrorMiddleware();
 
         app.UseHttpsRedirection();
 
@@ -52,6 +53,8 @@ public class Program
         app.UseRouting();
 
         app.UseAuthorization();
+
+        app.MapControllers();
 
         app.MapRazorPages();
 
