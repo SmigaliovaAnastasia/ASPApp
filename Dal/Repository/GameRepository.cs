@@ -11,14 +11,13 @@ namespace ASPApp.Dal.Repository
         {
             _context = context;
         }
-        public async Task AddAsync(T? entity)
+        public async Task<T?> AddAsync(T? entity)
         {
-            if (entity == null)
+            if (entity != null)
             {
-                throw new ArgumentNullException();
+                await _context.Set<T>().AddAsync(entity);
             }
-
-            await _context.Set<T>().AddAsync(entity);
+            return entity;
         }
 
         public async Task<T?> GetByIdAsync(params Object[] id)
@@ -37,20 +36,20 @@ namespace ASPApp.Dal.Repository
             return await query.ToListAsync();
         }
 
-        public void Remove(T? entity)
+        public void Remove(T entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException();
-            }
-
             _context.Set<T>().Remove(entity);
         }
 
-        public async Task RemoveAsync(params object[] id)
+        public async Task<bool> RemoveAsync(params object[] id)
         {
             var entity = await GetByIdAsync(id);
+            if (entity == null)
+            {
+                return false;
+            }
             Remove(entity);
+            return true;
         }
 
         public async Task SaveChangesAsync()
@@ -58,19 +57,20 @@ namespace ASPApp.Dal.Repository
             await _context.SaveChangesAsync();
         }
 
-        public void Update(T? entity)
+        public void Update(T entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException();
-            }
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public async Task UpdateAsync(params object[] id)
+        public async Task<bool> UpdateAsync(params object[] id)
         {
             var entity = await GetByIdAsync(id);
+            if (entity == null)
+            {
+                return false;
+            }
             Update(entity);
+            return true;
         }
     }
 }

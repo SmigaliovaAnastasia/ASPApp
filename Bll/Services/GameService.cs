@@ -15,23 +15,25 @@ namespace ASPApp.Bll.Services
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task CreateGameAsync(GameUpdateDto gameCreateDto)
+        public async Task<GameDto?> CreateGameAsync(GameUpdateDto gameCreateDto)
         {
             var game = _mapper.Map<Game>(gameCreateDto);
-            await _repository.AddAsync(game);
+            var result = await _repository.AddAsync(game);
             await _repository.SaveChangesAsync();
+            return _mapper.Map<GameDto>(game);
         }
 
-        public async Task DeleteGameAsync(int id)
+        public async Task<bool> DeleteGameAsync(int id)
         {
-            await _repository.RemoveAsync(id);
+            var result = await _repository.RemoveAsync(id);
             await _repository.SaveChangesAsync();
+            return result;
         }
 
-        public async Task<IEnumerable<GameDto>?> GetAllGames()
+        public async Task<IEnumerable<GameDto>?> GetAllGamesAsync()
         {
             var games = await _repository.GetAllAsync();
-            if(games == null)
+            if (games == null)
             {
                 return null;
             }
@@ -39,22 +41,23 @@ namespace ASPApp.Bll.Services
             return gameDtos;
         }
 
-        public async Task<GameDto> GetGameAsync(int id)
+        public async Task<GameDto?> GetGameAsync(int id)
+        {
+            var game = await _repository.GetByIdAsync(id);
+            return game != null ? _mapper.Map<GameDto>(game) : null;
+        }
+
+        public async Task<GameDto?> UpdateGameAsync(int id, GameUpdateDto gameDto)
         {
             var game = await _repository.GetByIdAsync(id);
             if(game == null)
             {
-                throw new ArgumentNullException();
+                return null;
             }
-            var gameDto = _mapper.Map<GameDto>(game);
-            return gameDto;
-        }
-
-        public async Task UpdateGameAsync(int id, GameUpdateDto gameDto)
-        {
-            var game = await _repository.GetByIdAsync(id);
             _mapper.Map(gameDto, game);
+            await _repository.UpdateAsync(game.GameId);
             await _repository.SaveChangesAsync();
+            return _mapper.Map<GameDto>(game);
         }
     }
 }

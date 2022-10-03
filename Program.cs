@@ -3,6 +3,10 @@ using ASPApp.WebAPI.Extensions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using static ASPApp.WebAPI.Extensions.MiddlewareExtensions;
+using ASPApp.WebAPI.Controllers;
+using ASPApp.Bll.Services;
+using ASPApp.Bll.Mappings;
+//app.MapGameDtoEndpoints();
 namespace ASPApp;
 
 public class Program
@@ -21,11 +25,10 @@ public class Program
         builder.Services.AddDbContext<GameContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BoardGameApp")));
 
-        //var mapperConfig = new MapperConfiguration(m =>
-        //{
-        //    m.AddProfile(new GameMappingProfile());
-        //});
-        //builder.Services.AddSingleton(mapperConfig.CreateMapper());
+        builder.Services.AddAutoMapper(typeof(GameMappingProfile));
+        builder.Services.AddControllers();
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(GameRepository<>));
+        builder.Services.AddScoped<IGameService, GameService>();
 
         var app = builder.Build();
 
