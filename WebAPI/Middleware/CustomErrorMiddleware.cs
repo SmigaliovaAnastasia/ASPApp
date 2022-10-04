@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Data;
 using System.Net;
+using System.Security.Principal;
 using System.Web;
 
 namespace ASPApp.WebAPI.Middleware
@@ -34,7 +37,7 @@ namespace ASPApp.WebAPI.Middleware
                 var statusCode = context.Response.StatusCode;
                 if (statusCode >= 400)
                 {
-                    var exceptionDetails = new RequestExceptionDetails(statusCode);
+                   var exceptionDetails = new RequestExceptionDetails(statusCode);
                     context.Response.Redirect($"/Error/{exceptionDetails.StatusCode}?message={exceptionDetails.Message}");
                 }
             }

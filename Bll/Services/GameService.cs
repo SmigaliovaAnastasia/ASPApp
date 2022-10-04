@@ -2,6 +2,8 @@
 using ASPApp.Dal.Repository;
 using AutoMapper;
 using ASPApp.Domain.Entities;
+using ASPApp.Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ASPApp.Bll.Services
 {
@@ -18,16 +20,29 @@ namespace ASPApp.Bll.Services
         public async Task<GameDto?> CreateGameAsync(GameUpdateDto gameCreateDto)
         {
             var game = _mapper.Map<Game>(gameCreateDto);
-            var result = await _repository.AddAsync(game);
+            var existanceCheck = await _repository.GetWithFilter(g => 
+                g.Name == game.Name &&
+                g.ReleaseDate == game.ReleaseDate);
+            if (existanceCheck != null)
+            {
+                throw new EntryAlreadyExistsException("The game you are trying to add already exists");
+            }
+            await _repository.AddAsync(game);
             await _repository.SaveChangesAsync();
             return _mapper.Map<GameDto>(game);
         }
 
-        public async Task<bool> DeleteGameAsync(int id)
+        public async Task DeleteGameAsync(int id)
         {
-            var result = await _repository.RemoveAsync(id);
-            await _repository.SaveChangesAsync();
-            return result;
+            try
+            {
+                await _repository.RemoveAsync(id);
+                await _repository.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new ConcurrencyException("The game you are trying to delete was already deleted");
+            }
         }
 
         public async Task<IEnumerable<GameDto>?> GetAllGamesAsync()
@@ -35,7 +50,7 @@ namespace ASPApp.Bll.Services
             var games = await _repository.GetAllAsync();
             if (games == null)
             {
-                return null;
+                throw new EntryNotFoundException("No games found.");
             }
             var gameDtos = _mapper.Map<IEnumerable<Game>, IEnumerable<GameDto>>(games);
             return gameDtos;
@@ -44,20 +59,30 @@ namespace ASPApp.Bll.Services
         public async Task<GameDto?> GetGameAsync(int id)
         {
             var game = await _repository.GetByIdAsync(id);
-            return game != null ? _mapper.Map<GameDto>(game) : null;
+            if(game == null)
+            {
+                throw new EntryNotFoundException("The game you are requesting doesn't exist");
+            }
+            return _mapper.Map<GameDto>(game);
         }
 
-        public async Task<GameDto?> UpdateGameAsync(int id, GameUpdateDto gameDto)
+        public async Task UpdateGameAsync(int id, GameUpdateDto gameDto)
         {
             var game = await _repository.GetByIdAsync(id);
             if(game == null)
             {
-                return null;
+                throw new EntryNotFoundException("The game you are trying to update doesn't exist");
             }
             _mapper.Map(gameDto, game);
-            await _repository.UpdateAsync(game.GameId);
-            await _repository.SaveChangesAsync();
-            return _mapper.Map<GameDto>(game);
+            try
+            {
+                await _repository.UpdateAsync(game.GameId);
+                await _repository.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new ConcurrencyException("The game you are trying to update was already updated.");
+            }
         }
     }
 }

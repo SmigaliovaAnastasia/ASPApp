@@ -14,10 +14,10 @@ namespace ASPApp.Domain.Entities
         public string? PlayingTime { get; set; }
         public DateTime ReleaseDate { get; set; }
         [Timestamp]
-        public byte[] Timestamp { get; set; }
+        public byte[] RowVersion { get; set; }
 
         public Game() { }
-        public Game(string name, string? description, string? rules, int minNumOfPlayers, int maxNumOfPlayers, int minPalyerAge, string? playingTime, DateTime releaseDate, byte[] timestamp)
+        public Game(string name, string? description, string? rules, int minNumOfPlayers, int maxNumOfPlayers, int minPalyerAge, string? playingTime, DateTime releaseDate)
         {
             Name = name;
             Description = description;
@@ -27,7 +27,6 @@ namespace ASPApp.Domain.Entities
             MinPalyerAge = minPalyerAge;
             PlayingTime = playingTime;
             ReleaseDate = releaseDate;
-            Timestamp = timestamp;
         }
     }
 }

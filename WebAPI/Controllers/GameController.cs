@@ -2,7 +2,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ASPApp.Common.Dtos;
-
+using System.Net;
+using ASPApp.Common.Exceptions;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ASPApp.WebAPI.Controllers
@@ -19,6 +20,7 @@ namespace ASPApp.WebAPI.Controllers
 
         // GET: api/<GameController>
         [HttpGet]
+        [ApiExceptionFilter]
         public async Task<IActionResult> Get()
         {
             return Ok(await _gameService.GetAllGamesAsync());
@@ -26,6 +28,7 @@ namespace ASPApp.WebAPI.Controllers
 
         // GET api/<GameController>/5
         [HttpGet("{id}")]
+        [ApiExceptionFilter]
         public async Task<IActionResult> Get(int id)
         {
             return Ok(await _gameService.GetGameAsync(id));
@@ -33,37 +36,28 @@ namespace ASPApp.WebAPI.Controllers
 
         // POST api/<GameController>
         [HttpPost]
+        [ApiExceptionFilter]
         public async Task<IActionResult> Post([FromBody] GameUpdateDto gameDto)
         {
             var game = await _gameService.CreateGameAsync(gameDto);
-            if(game == null)
-            { 
-                return BadRequest("Unable to create game.");
-            }
             return CreatedAtAction(nameof(Get), new { id = game.GameId }, game);
         }
 
         // PUT api/<GameController>/5
         [HttpPut("{id}")]
+        [ApiExceptionFilter]
         public async Task<IActionResult> Put(int id, [FromBody] GameUpdateDto gameDto)
         {
-            var game = await _gameService.UpdateGameAsync(id, gameDto);
-            if (game == null)
-            {
-                return NotFound();
-            }
+            await _gameService.UpdateGameAsync(id, gameDto);
             return Ok();
         }
 
         // DELETE api/<GameController>/5
         [HttpDelete("{id}")]
+        [ApiExceptionFilter]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _gameService.DeleteGameAsync(id);
-            if(result == false)
-            {
-                return NotFound();
-            }
+            await _gameService.DeleteGameAsync(id);
             return NoContent();
         }
     }

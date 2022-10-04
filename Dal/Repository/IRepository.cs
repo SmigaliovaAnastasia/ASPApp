@@ -6,11 +6,10 @@ namespace ASPApp.Dal.Repository
     {
         Task<IEnumerable<T>?> GetAllAsync();
         Task<T?> GetByIdAsync(params object[] id);
-        Task<T?> AddAsync(T? entity);
-        void Remove(T entity);
-        Task<bool> RemoveAsync(params object[] id);
-        void Update(T entity);
-        Task<bool> UpdateAsync(params object[] id);
+        Task<T?> GetWithFilter(Expression<Func<T, bool>> filterProperties);
+        Task AddAsync(T? entity);
+        Task RemoveAsync(params object[] id);
+        Task UpdateAsync(params object[] id);
         Task SaveChangesAsync();
         Task<IEnumerable<T>> GetWithIncludeAsync(params Expression<Func<T, object>>[] includeProperties);
     }

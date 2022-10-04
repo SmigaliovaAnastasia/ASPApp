@@ -13,9 +13,9 @@ namespace ASPApp.Bll.Services
 
         Task<GameDto?> CreateGameAsync(GameUpdateDto bookForUpdateDto);
 
-        Task<GameDto?> UpdateGameAsync(int id, GameUpdateDto bookDto);
+        Task UpdateGameAsync(int id, GameUpdateDto bookDto);
 
-        Task<bool> DeleteGameAsync(int id);
+        Task DeleteGameAsync(int id);
     }
 }
 

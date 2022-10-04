@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ASPApp.Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq.Expressions;
-
+using System.Linq;
 namespace ASPApp.Dal.Repository
 {
     public class GameRepository<T> : IRepository<T> where T : class
@@ -11,16 +12,15 @@ namespace ASPApp.Dal.Repository
         {
             _context = context;
         }
-        public async Task<T?> AddAsync(T? entity)
+        public async Task AddAsync(T? entity)
         {
             if (entity != null)
             {
                 await _context.Set<T>().AddAsync(entity);
             }
-            return entity;
         }
 
-        public async Task<T?> GetByIdAsync(params Object[] id)
+        public async Task<T?> GetByIdAsync(params object[] id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -29,6 +29,7 @@ namespace ASPApp.Dal.Repository
         {
             return await _context.Set<T>().ToListAsync();
         }
+
         public async Task<IEnumerable<T>> GetWithIncludeAsync(params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> query = _context.Set<T>();
@@ -36,20 +37,19 @@ namespace ASPApp.Dal.Repository
             return await query.ToListAsync();
         }
 
-        public void Remove(T entity)
+        public async Task<T?> GetWithFilter(Expression<Func<T, bool>> filterProperties)
         {
-            _context.Set<T>().Remove(entity);
+            return await _context.Set<T>().FirstOrDefaultAsync(filterProperties);
         }
 
-        public async Task<bool> RemoveAsync(params object[] id)
+        public async Task RemoveAsync(params object[] id)
         {
             var entity = await GetByIdAsync(id);
             if (entity == null)
             {
-                return false;
+                throw new EntryNotFoundException("The game you are deleting doesn't exist");
             }
-            Remove(entity);
-            return true;
+            _context.Remove(entity);
         }
 
         public async Task SaveChangesAsync()
@@ -57,20 +57,14 @@ namespace ASPApp.Dal.Repository
             await _context.SaveChangesAsync();
         }
 
-        public void Update(T entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-        }
-
-        public async Task<bool> UpdateAsync(params object[] id)
+        public async Task UpdateAsync(params object[] id)
         {
             var entity = await GetByIdAsync(id);
             if (entity == null)
             {
-                return false;
+                throw new EntryNotFoundException("The game you are updating doesn't exist");
             }
-            Update(entity);
-            return true;
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }
