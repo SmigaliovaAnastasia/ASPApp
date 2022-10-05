@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\Tests\**" />
+    <Content Remove="Common\Tests\**" />
+    <EmbeddedResource Remove="Common\Tests\**" />
+    <None Remove="Common\Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\img\logo.jpg" />
   </ItemGroup>
 

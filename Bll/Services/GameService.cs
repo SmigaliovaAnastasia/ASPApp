@@ -17,10 +17,10 @@ namespace ASPApp.Bll.Services
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<GameDto?> CreateGameAsync(GameUpdateDto gameCreateDto)
+        public async Task<GameDto> CreateGameAsync(GameUpdateDto gameCreateDto)
         {
             var game = _mapper.Map<Game>(gameCreateDto);
-            var existanceCheck = await _repository.GetWithFilter(g => 
+            var existanceCheck = await _repository.GetWithFilterAsync(g => 
                 g.Name == game.Name &&
                 g.ReleaseDate == game.ReleaseDate);
             if (existanceCheck != null)
@@ -45,7 +45,7 @@ namespace ASPApp.Bll.Services
             }
         }
 
-        public async Task<IEnumerable<GameDto>?> GetAllGamesAsync()
+        public async Task<IEnumerable<GameDto>> GetAllGamesAsync()
         {
             var games = await _repository.GetAllAsync();
             if (games == null)
@@ -56,7 +56,7 @@ namespace ASPApp.Bll.Services
             return gameDtos;
         }
 
-        public async Task<GameDto?> GetGameAsync(int id)
+        public async Task<GameDto> GetGameAsync(int id)
         {
             var game = await _repository.GetByIdAsync(id);
             if(game == null)

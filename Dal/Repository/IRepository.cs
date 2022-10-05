@@ -6,7 +6,7 @@ namespace ASPApp.Dal.Repository
     {
         Task<IEnumerable<T>?> GetAllAsync();
         Task<T?> GetByIdAsync(params object[] id);
-        Task<T?> GetWithFilter(Expression<Func<T, bool>> filterProperties);
+        Task<T?> GetWithFilterAsync(Expression<Func<T, bool>> filterProperties);
         Task AddAsync(T? entity);
         Task RemoveAsync(params object[] id);
         Task UpdateAsync(params object[] id);

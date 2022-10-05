@@ -37,7 +37,7 @@ namespace ASPApp.Dal.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetWithFilter(Expression<Func<T, bool>> filterProperties)
+        public async Task<T?> GetWithFilterAsync(Expression<Func<T, bool>> filterProperties)
         {
             return await _context.Set<T>().FirstOrDefaultAsync(filterProperties);
         }
