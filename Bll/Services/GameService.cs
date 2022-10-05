@@ -48,7 +48,7 @@ namespace ASPApp.Bll.Services
         public async Task<IEnumerable<GameDto>> GetAllGamesAsync()
         {
             var games = await _repository.GetAllAsync();
-            if (games == null)
+            if (games == null || games.Count() == 0)
             {
                 throw new EntryNotFoundException("No games found.");
             }
