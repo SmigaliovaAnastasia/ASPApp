@@ -11,7 +11,7 @@ namespace ASPApp.Common.Dtos
 
         [StringLength(1000)]
         public string? Description { get; set; }
-        [StringLength(10000)]
+        [StringLength(1000)]
         public string? Rules { get; set; }
         [Required]
         [Range(1, 100, ErrorMessage = "Number of players should be a positive number from 1 to 100")]
@@ -22,10 +22,16 @@ namespace ASPApp.Common.Dtos
         [Required]
         [Range(1, 100, ErrorMessage = "Minimum player's age should be a positive number from 1 to 100")]
         public int MinPalyerAge { get; set; }
-        [RegularExpression(@"^[0-9]{1,3}((-[0-9]{1,3})|\+) (min|hours?)$",
-            ErrorMessage = "Playing time should represent a range of minutes or hours.")]
-        public string? PlayingTime { get; set; }
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Min playing time should be a number greater than 1")]
+        public int minPlayingTimeMinutes { get; set; }
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Max playing time should be a number greater than 1")]
+        public int maxPlayingTimeMinutes { get; set; }
         [Required]
         public DateTime ReleaseDate { get; set; }
+        public string? ImageUrl { get; set; }
+        public Guid GameSeriesId { get; set; }
+        public Guid ComplexityLevelId { get; set; }
     }
 }

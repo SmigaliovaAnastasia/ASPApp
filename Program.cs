@@ -1,12 +1,11 @@
 using ASPApp.Dal.Repository;
-using ASPApp.WebAPI.Extensions;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using static ASPApp.WebAPI.Extensions.MiddlewareExtensions;
 using ASPApp.WebAPI.Controllers;
 using ASPApp.Bll.Services;
 using ASPApp.Bll.Mappings;
 using ASPApp.Domain.Entities;
+using React.AspNet;
 //app.MapGameDtoEndpoints();
 namespace ASPApp;
 
@@ -17,7 +16,6 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddRazorPages();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
@@ -30,6 +28,7 @@ public class Program
         builder.Services.AddScoped<DbContext, GameContext>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(GameRepository<>));
         builder.Services.AddScoped<IGameService, GameService>();
+
 
         var app = builder.Build();
 
@@ -52,12 +51,17 @@ public class Program
 
         app.UseRouting();
 
+        app.UseCors(configurePolicy => configurePolicy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
         app.UseAuthorization();
 
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+
         app.MapControllers();
-
-        app.MapRazorPages();
-
+       
         app.Run();
     }
 }

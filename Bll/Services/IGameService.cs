@@ -7,15 +7,15 @@ namespace ASPApp.Bll.Services
 {
     public interface IGameService
     {
-        Task<IEnumerable<GameDto>> GetAllGamesAsync();
+        Task<IEnumerable<GameListDto>> GetAllGamesAsync();
 
-        Task<GameDto> GetGameAsync(int id);
+        Task<GameDto> GetGameAsync(Guid id);
 
         Task<GameDto> CreateGameAsync(GameUpdateDto bookForUpdateDto);
 
-        Task UpdateGameAsync(int id, GameUpdateDto bookDto);
+        Task UpdateGameAsync(Guid id, GameUpdateDto bookDto);
 
-        Task DeleteGameAsync(int id);
+        Task DeleteGameAsync(Guid id);
     }
 }
 

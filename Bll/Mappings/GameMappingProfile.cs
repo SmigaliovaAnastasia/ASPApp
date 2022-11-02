@@ -9,10 +9,18 @@ namespace ASPApp.Bll.Mappings
     {
         public GameMappingProfile()
         {
-            CreateMap<Game, GameDto>();
-            CreateMap<GameDto, Game>();
+            CreateMap<Game, GameDto>()
+                .ForMember(x => x.ComplexityLevelDto, y => y.MapFrom(z => z.ComplexityLevel))
+                .ForMember(x => x.GameSeriesDto, y => y.MapFrom(z => z.GameSeries))
+                .ForMember(x => x.GenreDtos, y => y.MapFrom(z => z.Genres));
             CreateMap<GameUpdateDto, Game>();
-            CreateMap<Game, GameUpdateDto>();
+            CreateMap<Game, GameListDto>()
+                .ForMember(x => x.ComplexityLevelName, y => y.MapFrom(z => z.ComplexityLevel.Name))
+                .ForMember(x => x.Genres, y => y.MapFrom(z => z.Genres.Select(g => g.Name)));
+
+            CreateMap<GameSeries, GameSeriesDto>();
+            CreateMap<Genre, GenreDto>();
+            CreateMap<ComplexityLevel, ComplexityLevelDto>();
         }
     }
 }

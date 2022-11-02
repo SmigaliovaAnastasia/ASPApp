@@ -20,7 +20,7 @@ namespace ASPApp.Bll.Services
         public async Task<GameDto> CreateGameAsync(GameUpdateDto gameCreateDto)
         {
             var game = _mapper.Map<Game>(gameCreateDto);
-            var existanceCheck = await _repository.GetWithFilterAsync(g => 
+            var existanceCheck = await _repository.GetWithFiltersAsync(g => 
                 g.Name == game.Name &&
                 g.ReleaseDate == game.ReleaseDate);
             if (existanceCheck != null)
@@ -32,7 +32,7 @@ namespace ASPApp.Bll.Services
             return _mapper.Map<GameDto>(game);
         }
 
-        public async Task DeleteGameAsync(int id)
+        public async Task DeleteGameAsync(Guid id)
         {
             try
             {
@@ -45,20 +45,20 @@ namespace ASPApp.Bll.Services
             }
         }
 
-        public async Task<IEnumerable<GameDto>> GetAllGamesAsync()
+        public async Task<IEnumerable<GameListDto>> GetAllGamesAsync()
         {
-            var games = await _repository.GetAllAsync();
+            var games = await _repository.GetWithIncludeAsync(g => g.ComplexityLevel, z => z.Genres);
             if (games == null || games.Count() == 0)
             {
                 throw new EntryNotFoundException("No games found.");
             }
-            var gameDtos = _mapper.Map<IEnumerable<Game>, IEnumerable<GameDto>>(games);
+            var gameDtos = _mapper.Map<IEnumerable<Game>, IEnumerable<GameListDto>>(games);
             return gameDtos;
         }
 
-        public async Task<GameDto> GetGameAsync(int id)
+        public async Task<GameDto> GetGameAsync(Guid id)
         {
-            var game = await _repository.GetByIdAsync(id);
+            var game = await _repository.GetByIdWithIncludeAsync(id, g => g.ComplexityLevel, g => g.Genres, g => g.GameSeries);
             if(game == null)
             {
                 throw new EntryNotFoundException("The game you are requesting doesn't exist");
@@ -66,7 +66,7 @@ namespace ASPApp.Bll.Services
             return _mapper.Map<GameDto>(game);
         }
 
-        public async Task UpdateGameAsync(int id, GameUpdateDto gameDto)
+        public async Task UpdateGameAsync(Guid id, GameUpdateDto gameDto)
         {
             var game = await _repository.GetByIdAsync(id);
             if(game == null)
@@ -76,7 +76,7 @@ namespace ASPApp.Bll.Services
             _mapper.Map(gameDto, game);
             try
             {
-                await _repository.UpdateAsync(game.GameId);
+                await _repository.UpdateAsync(game.Id);
                 await _repository.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
