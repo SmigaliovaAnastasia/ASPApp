@@ -5,6 +5,8 @@ using System.Linq.Expressions;
 using System.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using ASPApp.Domain.Entities;
+using ASPApp.Common.Models.Pagination;
+using AutoMapper;
 
 namespace ASPApp.Dal.Repository
 {
@@ -15,7 +17,7 @@ namespace ASPApp.Dal.Repository
         {
             _context = context;
         }
- 
+
         public async Task<T?> GetByIdAsync(Guid id)
         {
             return await _context.Set<T>().FindAsync(id);
@@ -32,14 +34,24 @@ namespace ASPApp.Dal.Repository
             return await _context.Set<T>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>?> GetWithIncludeAsync(params Expression<Func<T, object>>[] includeProperties)
+        public async Task<IEnumerable<T>?> GetAllWithIncludeAsync(params Expression<Func<T, object>>[] includeProperties)
         {
             return await IncludeProperties(includeProperties).ToListAsync();
         }
 
-        public async Task<IEnumerable<T>?> GetWithFiltersAsync(Expression<Func<T, bool>> filterProperties)
+        public async Task<T?> GetWithFiltersAsync(Expression<Func<T, bool>> filterProperties)
         {
-            return await _context.Set<T>().Where(filterProperties).ToListAsync();
+            return await _context.Set<T>().FirstOrDefaultAsync(filterProperties);
+        }
+
+        public async Task<PagedResult<TDto>> GetPagedResultAsync<TDto>(PagedRequest<T> request, IMapper mapper, params Expression<Func<T, object>>[] includeProperties) where TDto : class
+        {
+            var query = IncludeProperties(includeProperties);
+            query = request.ApplyFilters(query);
+            var list = await request.ApplySortingMethod(query).ToListAsync();
+            var total = list.Count();
+            var result = mapper.Map<IEnumerable<T>, IEnumerable<TDto>>(list.Skip(request.PageIndex * request.PageSize).Take(request.PageSize));
+            return new PagedResult<TDto>(request.PageIndex, request.PageSize, total, result);
         }
 
         public async Task AddAsync(T? entity)

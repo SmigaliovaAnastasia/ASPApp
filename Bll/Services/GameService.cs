@@ -4,6 +4,7 @@ using AutoMapper;
 using ASPApp.Domain.Entities;
 using ASPApp.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using ASPApp.Common.Models.Pagination;
 
 namespace ASPApp.Bll.Services
 {
@@ -47,13 +48,18 @@ namespace ASPApp.Bll.Services
 
         public async Task<IEnumerable<GameListDto>> GetAllGamesAsync()
         {
-            var games = await _repository.GetWithIncludeAsync(g => g.ComplexityLevel, z => z.Genres);
+            var games = await _repository.GetAllWithIncludeAsync(g => g.ComplexityLevel, z => z.Genres);
             if (games == null || games.Count() == 0)
             {
                 throw new EntryNotFoundException("No games found.");
             }
             var gameDtos = _mapper.Map<IEnumerable<Game>, IEnumerable<GameListDto>>(games);
             return gameDtos;
+        }
+
+        public async Task<PagedResult<GameListDto>> GetPagedGamesAsync(PagedRequest<Game> request)
+        {
+            return await _repository.GetPagedResultAsync<GameListDto>(request, _mapper, g => g.Genres, g => g.ComplexityLevel, g => g.GameSeries);
         }
 
         public async Task<GameDto> GetGameAsync(Guid id)

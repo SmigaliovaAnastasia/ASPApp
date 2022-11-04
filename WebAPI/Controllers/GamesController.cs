@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using ASPApp.Common.Dtos;
 using System.Net;
 using ASPApp.Common.Exceptions;
+using ASPApp.Common.Models.Pagination;
+using ASPApp.Domain.Entities;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ASPApp.WebAPI.Controllers
@@ -38,6 +40,13 @@ namespace ASPApp.WebAPI.Controllers
         {
             var game = await _gameService.CreateGameAsync(gameDto);
             return CreatedAtAction(nameof(Get), new { id = game.Id }, game);
+        }
+
+        [HttpPost("paginated")]
+        [ApiExceptionFilter]
+        public async Task<IActionResult> GetPaged([FromBody] GamePagedRequest request)
+        {
+            return Ok(await _gameService.GetPagedGamesAsync(request));
         }
 
         [HttpPut("{id}")]

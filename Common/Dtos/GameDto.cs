@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ASPApp.Common.Dtos
 {
-    public class GameDto
+    public class GameDto 
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
