@@ -2,15 +2,20 @@
 using ASPApp.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using ASPApp.Domain.Entities.Auth;
+using ASPApp.Dal.EntityConfiguration;
 
 namespace ASPApp.Dal
 {
-    public class GameContext : IdentityDbContext<IdentityUser>
+    public class GameContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         DbSet<Game> Games { get; set; }
         DbSet<Genre> Genres { get; set; }
         DbSet<ComplexityLevel> ComplexityLevels { get; set; }
         DbSet<GameSeries> GameSeries { get; set; }
+        DbSet<Review> Reviews { get; set; }
+        DbSet<Collection> Collections { get; set; }
+        DbSet<CollectionGame> CollectionsGames { get; set; }
 
         public GameContext() : base() { }
         public GameContext(DbContextOptions options) : base(options) { }
@@ -18,57 +23,13 @@ namespace ASPApp.Dal
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Game>()
-                .Property(e => e.Id)
-                .HasDefaultValueSql("newsequentialid()");
-            modelBuilder.Entity<Game>()
-                .Property(e => e.Name)
-                .HasMaxLength(200);
-            modelBuilder.Entity<Game>()
-                .Property(e => e.Description)
-                .HasColumnType("text");
-            modelBuilder.Entity<Game>()
-                .Property(e => e.Rules)
-                .HasColumnType("text");
-            modelBuilder.Entity<Game>()
-                .Property(e => e.ReleaseDate)
-                .HasColumnType("date");
-            modelBuilder.Entity<Game>()
-                .HasOne(e => e.ComplexityLevel)
-                .WithMany(e => e.Games)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-            modelBuilder.Entity<Game>()
-                .HasOne(e => e.GameSeries)
-                .WithMany(e => e.Games)
-                .OnDelete(DeleteBehavior.ClientSetNull);
 
-            modelBuilder.Entity<Genre>()
-               .Property(e => e.Id)
-               .HasDefaultValueSql("newsequentialid()");
-            modelBuilder.Entity<Genre>()
-                .Property(e => e.Name)
-                .HasMaxLength(200);
-
-
-            modelBuilder.Entity<ComplexityLevel>()
-                .Property(e => e.Id)
-                .HasDefaultValueSql("newsequentialid()");
-            modelBuilder.Entity<ComplexityLevel>()
-                .Property(e => e.Name)
-                .HasMaxLength(200);
-            modelBuilder.Entity<ComplexityLevel>()
-                .Property(e => e.Description)
-                .HasColumnType("text");
-
-            modelBuilder.Entity<GameSeries>()
-                .Property(e => e.Id)
-                .HasDefaultValueSql("newsequentialid()");
-            modelBuilder.Entity<GameSeries>()
-                .Property(e => e.Name)
-                .HasMaxLength(200);
-            modelBuilder.Entity<GameSeries>()
-                .Property(e => e.Description)
-                .HasColumnType("text");
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CollectionGameConfiguration).Assembly); ;
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ComplexityLevelConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameSeriesConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(GenreConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ReviewConfiguration).Assembly);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

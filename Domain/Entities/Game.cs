@@ -23,5 +23,7 @@ namespace ASPApp.Domain.Entities
         public GameSeries GameSeries { get; set; }
         public Guid ComplexityLevelId { get; set; }
         public ComplexityLevel ComplexityLevel { get; set; }
+        public ICollection<CollectionGame> CollectionGames { get; set; }
+        public ICollection<Review> Reviews { get; set; }
     }
 }
