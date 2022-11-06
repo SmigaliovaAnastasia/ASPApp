@@ -1,7 +1,8 @@
 ﻿using NuGet.Packaging.Signing;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ASPApp.Common.Dtos
+namespace ASPApp.Common.Dtos.GameDtos
 {
     public class GameUpdateDto
     {
@@ -33,5 +34,7 @@ namespace ASPApp.Common.Dtos
         public string? ImageUrl { get; set; }
         public Guid GameSeriesId { get; set; }
         public Guid ComplexityLevelId { get; set; }
+        [NotMapped]
+        public ICollection<Guid> GenreIds { get; set; }
     }
 }

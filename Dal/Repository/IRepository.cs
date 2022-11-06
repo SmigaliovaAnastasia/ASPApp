@@ -18,5 +18,6 @@ namespace ASPApp.Dal.Repository
         Task RemoveAsync(Guid id);
         Task UpdateAsync(Guid id);
         Task SaveChangesAsync();
+        Task<Game?> ConnectRelatedEntities(Guid id, ICollection<Guid> ids);
     }
 }

@@ -1,11 +1,11 @@
 ﻿using ASPApp.Bll.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ASPApp.Common.Dtos;
 using System.Net;
 using ASPApp.Common.Exceptions;
-using ASPApp.Common.Models.Pagination;
 using ASPApp.Domain.Entities;
+using ASPApp.Common.Models.Pagination.GamePagination;
+using ASPApp.Common.Dtos.GameDtos;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ASPApp.WebAPI.Controllers

@@ -1,6 +1,4 @@
 ﻿using ASPApp.Common.Exceptions;
-using ASPApp.Common.Models.Pagination.Filter;
-using ASPApp.Common.Models.Pagination.SortingMethod;
 using System.Net;
 
 namespace ASPApp.Common.Models.Pagination

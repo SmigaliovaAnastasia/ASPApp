@@ -1,14 +1,9 @@
 using ASPApp.Dal.Repository;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using ASPApp.WebAPI.Controllers;
 using ASPApp.Bll.Services;
 using ASPApp.Bll.Mappings;
 using ASPApp.Domain.Entities;
-using React.AspNet;
-using ASPApp.Common.Models.Pagination.SortingMethod;
-using ASPApp.Common.Models.Pagination.Filter;
-//app.MapGameDtoEndpoints();
+
 namespace ASPApp;
 
 public class Program
@@ -28,7 +23,7 @@ public class Program
 
         builder.Services.AddAutoMapper(typeof(GameMappingProfile));
         builder.Services.AddScoped<DbContext, GameContext>();
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(GameRepository<>));
+        builder.Services.AddScoped(typeof(IRepository<Game>), typeof(GameRepository));
         builder.Services.AddScoped<IGameService, GameService>();
         builder.Services.AddControllers().AddNewtonsoftJson();
 

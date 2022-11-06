@@ -46,6 +46,7 @@ namespace ASPApp.Dal.Repository
                 .Property(e => e.Name)
                 .HasMaxLength(200);
 
+
             modelBuilder.Entity<ComplexityLevel>()
                 .Property(e => e.Id)
                 .HasDefaultValueSql("newsequentialid()");
@@ -65,8 +66,6 @@ namespace ASPApp.Dal.Repository
             modelBuilder.Entity<GameSeries>()
                 .Property(e => e.Description)
                 .HasColumnType("text");
-
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

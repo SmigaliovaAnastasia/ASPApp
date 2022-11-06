@@ -45,7 +45,7 @@ namespace ASPApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComplexityLevels");
+                    b.ToTable("ComplexityLevels", (string)null);
                 });
 
             modelBuilder.Entity("ASPApp.Domain.Entities.Game", b =>
@@ -105,7 +105,7 @@ namespace ASPApp.Migrations
 
                     b.HasIndex("GameSeriesId");
 
-                    b.ToTable("Games");
+                    b.ToTable("Games", (string)null);
                 });
 
             modelBuilder.Entity("ASPApp.Domain.Entities.GameSeries", b =>
@@ -134,7 +134,7 @@ namespace ASPApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameSeries");
+                    b.ToTable("GameSeries", (string)null);
                 });
 
             modelBuilder.Entity("ASPApp.Domain.Entities.Genre", b =>
@@ -157,7 +157,7 @@ namespace ASPApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("GameGenre", b =>
@@ -172,7 +172,7 @@ namespace ASPApp.Migrations
 
                     b.HasIndex("GenresId");
 
-                    b.ToTable("GameGenre");
+                    b.ToTable("GameGenre", (string)null);
                 });
 
             modelBuilder.Entity("ASPApp.Domain.Entities.Game", b =>

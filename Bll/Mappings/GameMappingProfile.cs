@@ -2,6 +2,7 @@
 using System.Security.Policy;
 using ASPApp.Common.Dtos;
 using ASPApp.Domain.Entities;
+using ASPApp.Common.Dtos.GameDtos;
 
 namespace ASPApp.Bll.Mappings
 {
@@ -20,6 +21,7 @@ namespace ASPApp.Bll.Mappings
 
             CreateMap<GameSeries, GameSeriesDto>();
             CreateMap<Genre, GenreDto>();
+            CreateMap<GenreDto, Genre>();
             CreateMap<ComplexityLevel, ComplexityLevelDto>();
         }
     }

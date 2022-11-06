@@ -7,10 +7,11 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using ASPApp.Domain.Entities;
 using ASPApp.Common.Models.Pagination;
 using AutoMapper;
+using NuGet.Packaging;
 
 namespace ASPApp.Dal.Repository
 {
-    public class GameRepository<T> : IRepository<T> where T : class, IBaseEntity
+    public class GameRepository : IRepository<Game>
     {
         private DbContext _context { get; set; }
         public GameRepository(DbContext context)
@@ -18,47 +19,47 @@ namespace ASPApp.Dal.Repository
             _context = context;
         }
 
-        public async Task<T?> GetByIdAsync(Guid id)
+        public async Task<Game?> GetByIdAsync(Guid id)
         {
-            return await _context.Set<T>().FindAsync(id);
+            return await _context.Set<Game>().FindAsync(id);
         }
 
-        public async Task<T?> GetByIdWithIncludeAsync(Guid id, params Expression<Func<T, object>>[] includeProperties)
+        public async Task<Game?> GetByIdWithIncludeAsync(Guid id, params Expression<Func<Game, object>>[] includeProperties)
         {
             var query = IncludeProperties(includeProperties);
             return await query.SingleOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<IEnumerable<T>?> GetAllAsync()
+        public async Task<IEnumerable<Game>?> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context.Set<Game>().ToListAsync();
         }
 
-        public async Task<IEnumerable<T>?> GetAllWithIncludeAsync(params Expression<Func<T, object>>[] includeProperties)
+        public async Task<IEnumerable<Game>?> GetAllWithIncludeAsync(params Expression<Func<Game, object>>[] includeProperties)
         {
             return await IncludeProperties(includeProperties).ToListAsync();
         }
 
-        public async Task<T?> GetWithFiltersAsync(Expression<Func<T, bool>> filterProperties)
+        public async Task<Game?> GetWithFiltersAsync(Expression<Func<Game, bool>> filterProperties)
         {
-            return await _context.Set<T>().FirstOrDefaultAsync(filterProperties);
+            return await _context.Set<Game>().FirstOrDefaultAsync(filterProperties);
         }
 
-        public async Task<PagedResult<TDto>> GetPagedResultAsync<TDto>(PagedRequest<T> request, IMapper mapper, params Expression<Func<T, object>>[] includeProperties) where TDto : class
+        public async Task<PagedResult<TDto>> GetPagedResultAsync<TDto>(PagedRequest<Game> request, IMapper mapper, params Expression<Func<Game, object>>[] includeProperties) where TDto : class
         {
             var query = IncludeProperties(includeProperties);
             query = request.ApplyFilters(query);
             var list = await request.ApplySortingMethod(query).ToListAsync();
             var total = list.Count();
-            var result = mapper.Map<IEnumerable<T>, IEnumerable<TDto>>(list.Skip(request.PageIndex * request.PageSize).Take(request.PageSize));
+            var result = mapper.Map<IEnumerable<Game>, IEnumerable<TDto>>(list.Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize));
             return new PagedResult<TDto>(request.PageIndex, request.PageSize, total, result);
         }
 
-        public async Task AddAsync(T? entity)
+        public async Task AddAsync(Game? entity)
         {
             if (entity != null)
             {
-                await _context.Set<T>().AddAsync(entity);
+                await _context.Set<Game>().AddAsync(entity);
             }
         }
 
@@ -87,11 +88,23 @@ namespace ASPApp.Dal.Repository
             _context.Entry(entity).State = EntityState.Modified;
         }
 
-        public IQueryable<T> IncludeProperties(params Expression<Func<T, object>>[] includeProperties)
+        public IQueryable<Game> IncludeProperties(params Expression<Func<Game, object>>[] includeProperties)
         {
-            IQueryable<T> query = _context.Set<T>();
+            IQueryable<Game> query = _context.Set<Game>();
             includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty)).ToList();
             return query;
+        }
+
+        public async Task<Game?> ConnectRelatedEntities(Guid id, ICollection<Guid> ids)
+        {
+            var relatedEntities = await _context.Set<Genre>().Where(e => ids.Contains(e.Id)).ToListAsync();
+            var entity = await GetByIdWithIncludeAsync(id, g => g.Genres);
+            if (entity != null)
+            {
+                entity.Genres = entity.Genres.Intersect(relatedEntities).ToList();
+                entity.Genres.AddRange(relatedEntities.Except(entity.Genres));
+            }
+            return entity;
         }
     }
 }

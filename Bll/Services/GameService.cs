@@ -1,10 +1,10 @@
-﻿using ASPApp.Common.Dtos;
-using ASPApp.Dal.Repository;
+﻿using ASPApp.Dal.Repository;
 using AutoMapper;
 using ASPApp.Domain.Entities;
 using ASPApp.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using ASPApp.Common.Models.Pagination;
+using ASPApp.Common.Dtos.GameDtos;
 
 namespace ASPApp.Bll.Services
 {
@@ -30,6 +30,8 @@ namespace ASPApp.Bll.Services
             }
             await _repository.AddAsync(game);
             await _repository.SaveChangesAsync();
+            await _repository.ConnectRelatedEntities(game.Id, gameCreateDto.GenreIds);
+            await _repository.SaveChangesAsync();
             return _mapper.Map<GameDto>(game);
         }
 
@@ -48,7 +50,7 @@ namespace ASPApp.Bll.Services
 
         public async Task<IEnumerable<GameListDto>> GetAllGamesAsync()
         {
-            var games = await _repository.GetAllWithIncludeAsync(g => g.ComplexityLevel, z => z.Genres);
+            var games = await _repository.GetAllWithIncludeAsync(g => g.ComplexityLevel, g => g.Genres);
             if (games == null || games.Count() == 0)
             {
                 throw new EntryNotFoundException("No games found.");
@@ -83,6 +85,8 @@ namespace ASPApp.Bll.Services
             try
             {
                 await _repository.UpdateAsync(game.Id);
+                await _repository.SaveChangesAsync();
+                await _repository.ConnectRelatedEntities(game.Id, gameDto.GenreIds);
                 await _repository.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

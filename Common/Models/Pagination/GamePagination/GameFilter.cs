@@ -1,6 +1,7 @@
-﻿using ASPApp.Domain.Entities;
+﻿using ASPApp.Common.Models.Pagination;
+using ASPApp.Domain.Entities;
 
-namespace ASPApp.Common.Models.Pagination.Filter
+namespace ASPApp.Common.Models.Pagination.GamePagination
 {
     public class GameFilter : Filter<Game>
     {

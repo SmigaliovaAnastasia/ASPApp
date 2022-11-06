@@ -1,7 +1,6 @@
 ﻿using ASPApp.Domain.Entities;
-using Microsoft.CodeAnalysis.QuickInfo;
 
-namespace ASPApp.Common.Models.Pagination.SortingMethod
+namespace ASPApp.Common.Models.Pagination.GamePagination
 {
     public class GameSortingMethod : SortingMethod<Game>
     {

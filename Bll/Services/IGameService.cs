@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using ASPApp.Domain.Entities;
 using ASPApp.Dal.Repository;
-using ASPApp.Common.Dtos;
 using ASPApp.Common.Models.Pagination;
+using ASPApp.Common.Dtos.GameDtos;
 
 namespace ASPApp.Bll.Services
 {
