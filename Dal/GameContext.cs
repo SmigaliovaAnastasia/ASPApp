@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ASPApp.Domain.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
-namespace ASPApp.Dal.Repository
+namespace ASPApp.Dal
 {
-    public class GameContext : DbContext
+    public class GameContext : IdentityDbContext<IdentityUser>
     {
         DbSet<Game> Games { get; set; }
         DbSet<Genre> Genres { get; set; }
@@ -11,10 +13,11 @@ namespace ASPApp.Dal.Repository
         DbSet<GameSeries> GameSeries { get; set; }
 
         public GameContext() : base() { }
-        public GameContext(DbContextOptions<GameContext> options) : base(options) { }
+        public GameContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Game>()
                 .Property(e => e.Id)
                 .HasDefaultValueSql("newsequentialid()");

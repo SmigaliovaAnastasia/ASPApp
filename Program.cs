@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using ASPApp.Bll.Services;
 using ASPApp.Bll.Mappings;
 using ASPApp.Domain.Entities;
+using ASPApp.Dal;
+using Microsoft.AspNetCore.Identity;
 
 namespace ASPApp;
 
@@ -20,6 +22,8 @@ public class Program
 
         builder.Services.AddDbContext<GameContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BoardGameApp")));
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<GameContext>();
 
         builder.Services.AddAutoMapper(typeof(GameMappingProfile));
         builder.Services.AddScoped<DbContext, GameContext>();
