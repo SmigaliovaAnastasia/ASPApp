@@ -4,7 +4,7 @@ using ASPApp.Dal.Repository;
 using ASPApp.Common.Models.Pagination;
 using ASPApp.Common.Dtos.GameDtos;
 
-namespace ASPApp.Bll.Services
+namespace ASPApp.Bll.Interfaces
 {
     public interface IGameService
     {
@@ -13,9 +13,9 @@ namespace ASPApp.Bll.Services
 
         Task<GameDto> GetGameAsync(Guid id);
 
-        Task<GameDto> CreateGameAsync(GameUpdateDto bookForUpdateDto);
+        Task<GameDto> CreateGameAsync(GameUpdateDto gameUpdateDto);
 
-        Task UpdateGameAsync(Guid id, GameUpdateDto bookDto);
+        Task UpdateGameAsync(Guid id, GameUpdateDto gameDto);
 
         Task DeleteGameAsync(Guid id);
     }

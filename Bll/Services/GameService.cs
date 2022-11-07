@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using ASPApp.Common.Models.Pagination;
 using ASPApp.Common.Dtos.GameDtos;
 using ASPApp.Dal.Repository.Interfaces;
+using ASPApp.Bll.Interfaces;
 
 namespace ASPApp.Bll.Services
 {

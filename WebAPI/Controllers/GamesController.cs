@@ -1,10 +1,10 @@
-﻿using ASPApp.Bll.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ASPApp.Common.Exceptions;
-using ASPApp.Common.Models.Pagination.GamePagination;
 using ASPApp.Common.Dtos.GameDtos;
 using Microsoft.AspNetCore.Authorization;
 using ASPApp.Domain.Entities.Auth;
+using ASPApp.Bll.Interfaces;
+using ASPApp.Common.Models.Pagination.PagedRequests;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ASPApp.WebAPI.Controllers
@@ -25,7 +25,7 @@ namespace ASPApp.WebAPI.Controllers
         {
             return Ok(await _gameService.GetAllGamesAsync());
         }
-     
+
         [HttpGet("{id}")]
         [ApiExceptionFilter]
         public async Task<IActionResult> Get(Guid id)
@@ -33,6 +33,7 @@ namespace ASPApp.WebAPI.Controllers
             return Ok(await _gameService.GetGameAsync(id));
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         [ApiExceptionFilter]
         public async Task<IActionResult> Post([FromBody] GameUpdateDto gameDto)
@@ -41,7 +42,6 @@ namespace ASPApp.WebAPI.Controllers
             return CreatedAtAction(nameof(Get), new { id = game.Id }, game);
         }
 
-        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost("paginated")]
         [ApiExceptionFilter]
         public async Task<IActionResult> GetPaged([FromBody] GamePagedRequest request)

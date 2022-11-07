@@ -10,6 +10,9 @@ using ASPApp.Dal.Repository.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi.Models;
+using System.Security.Claims;
+using ASPApp.Bll.Interfaces;
 
 namespace ASPApp;
 
@@ -23,7 +26,33 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(opt =>
+        {
+            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+            opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "bearer"
+            });
+            opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
+                }
+            });
+        });
 
         builder.Services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("BoardGameApp")));
@@ -48,12 +77,19 @@ public class Program
                     ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:securityKey"]))
                 };
-        });
+            });
 
+        builder.Services.AddAutoMapper(typeof(ApplicationUserMappingProfile));
+        builder.Services.AddAutoMapper(typeof(CollectionGameMappingProfile));
+        builder.Services.AddAutoMapper(typeof(CollectionMappingProfile));
         builder.Services.AddAutoMapper(typeof(GameMappingProfile));
+        builder.Services.AddAutoMapper(typeof(ReviewMappingProfile));
+
         builder.Services.AddScoped<DbContext, ApplicationContext>();
         builder.Services.AddScoped(typeof(IGameRepository<Game>), typeof(GameRepository));
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         builder.Services.AddScoped<IGameService, GameService>();
+        builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddControllers().AddNewtonsoftJson();
 
         var app = builder.Build();
@@ -68,8 +104,6 @@ public class Program
         }
 
         app.UseExceptionHandler("/Error");
-
-        //app.UseCustomErrorMiddleware();
 
         app.UseHttpsRedirection();
 

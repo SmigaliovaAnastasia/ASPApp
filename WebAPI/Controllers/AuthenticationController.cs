@@ -48,6 +48,7 @@ namespace ASPApp.WebAPI.Controllers
 
                 var authClaims = new List<Claim>
                 {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
@@ -70,7 +71,7 @@ namespace ASPApp.WebAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult> Register(ApplicationUserRegisterDto userDto)
+        public async Task<ActionResult> Register([FromBody]ApplicationUserRegisterDto userDto)
         {
             var userExists = await _userManager.FindByNameAsync(userDto.UserName);
             if (userExists != null)
@@ -84,10 +85,32 @@ namespace ASPApp.WebAPI.Controllers
             }
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.User))
-                await _roleManager.CreateAsync(new ApplicationRole(UserRoles.User));
+                return BadRequest("User role not found");
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
             return Ok("User Created");
+        }
+
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(Guid id, [FromBody]ApplicationUserRegisterDto userDto)
+        {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userId != id.ToString())
+            {
+                return BadRequest("Access denied");
+            }
+            var userExists = await _userManager.FindByIdAsync(id.ToString());
+            if (userExists == null)
+                return BadRequest("User not found");
+
+            userExists = _mapper.Map(userDto, userExists);
+            var result = await _userManager.UpdateAsync(userExists);
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+            return Ok();
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
