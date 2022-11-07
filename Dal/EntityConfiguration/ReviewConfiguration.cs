@@ -10,6 +10,12 @@ namespace ASPApp.Dal.EntityConfiguration
         public void Configure(EntityTypeBuilder<Review> builder)
         {
             builder
+                .Property(e => e.Id)
+                .HasDefaultValueSql("newsequentialid()");
+            builder
+                .Property(e => e.Commentary)
+                .HasColumnType("text");
+            builder
                .HasAlternateKey(r => new { r.GameId, r.ApplicationUserId });
             builder
                 .HasOne(e => e.ApplicationUser)

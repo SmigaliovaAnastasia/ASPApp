@@ -8,10 +8,11 @@ using ASPApp.Domain.Entities;
 using ASPApp.Common.Models.Pagination;
 using AutoMapper;
 using NuGet.Packaging;
+using ASPApp.Dal.Repository.Interfaces;
 
-namespace ASPApp.Dal.Repository
+namespace ASPApp.Dal.Repository.Repositories
 {
-    public class GameRepository : IRepository<Game>
+    public class GameRepository : IGameRepository<Game>
     {
         private DbContext _context { get; set; }
         public GameRepository(DbContext context)

@@ -19,5 +19,6 @@ namespace ASPApp.Common.Dtos.GameDtos
         public ICollection<GenreDto> GenreDtos { get; set; }
         public GameSeriesDto GameSeriesDto { get; set; }
         public ComplexityLevelDto ComplexityLevelDto { get; set; }
+        public ICollection<Guid> ReviewIds { get; set; }
     }
 }

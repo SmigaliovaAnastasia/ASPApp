@@ -5,15 +5,16 @@ using ASPApp.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using ASPApp.Common.Models.Pagination;
 using ASPApp.Common.Dtos.GameDtos;
+using ASPApp.Dal.Repository.Interfaces;
 
 namespace ASPApp.Bll.Services
 {
     public class GameService : IGameService
     {
-        private readonly IRepository<Game> _repository;
+        private readonly IGameRepository<Game> _repository;
         private readonly IMapper _mapper;
 
-        public GameService(IRepository<Game> repository, IMapper mapper)
+        public GameService(IGameRepository<Game> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

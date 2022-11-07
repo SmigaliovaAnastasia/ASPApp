@@ -1,19 +1,22 @@
 ﻿using ASPApp.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace ASPApp.Dal.EntityConfiguration
 {
-    public class CollectionGameConfiguration : IEntityTypeConfiguration<CollectionGame>
+    public class CollectionConfiguration : IEntityTypeConfiguration<Collection>
     {
-        public void Configure(EntityTypeBuilder<CollectionGame> builder)
+        public void Configure(EntityTypeBuilder<Collection> builder)
         {
             builder
                 .Property(e => e.Id)
                 .HasDefaultValueSql("newsequentialid()");
             builder
-                .HasAlternateKey(r => new { r.CollectionId, r.GameId });
+                .Property(e => e.Name)
+                .HasMaxLength(200);
+            builder
+                .Property(e => e.Description)
+                .HasColumnType("text");
         }
     }
 }

@@ -4,18 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>ASPApp.Program</StartupObject>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Common\IntegrationTests\**" />
-    <Compile Remove="Common\Tests\**" />
-    <Content Remove="Common\IntegrationTests\**" />
-    <Content Remove="Common\Tests\**" />
-    <EmbeddedResource Remove="Common\IntegrationTests\**" />
-    <EmbeddedResource Remove="Common\Tests\**" />
-    <None Remove="Common\IntegrationTests\**" />
-    <None Remove="Common\Tests\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />

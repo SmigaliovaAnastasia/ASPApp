@@ -7,7 +7,7 @@ using ASPApp.Dal.EntityConfiguration;
 
 namespace ASPApp.Dal
 {
-    public class GameContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+    public class ApplicationContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
     {
         DbSet<Game> Games { get; set; }
         DbSet<Genre> Genres { get; set; }
@@ -17,14 +17,17 @@ namespace ASPApp.Dal
         DbSet<Collection> Collections { get; set; }
         DbSet<CollectionGame> CollectionsGames { get; set; }
 
-        public GameContext() : base() { }
-        public GameContext(DbContextOptions options) : base(options) { }
+        public ApplicationContext() : base() { }
+        public ApplicationContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CollectionGameConfiguration).Assembly); ;
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationRoleConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationUserConfiguration).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CollectionConfiguration).Assembly); 
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(CollectionGameConfiguration).Assembly); 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ComplexityLevelConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameConfiguration).Assembly);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GameSeriesConfiguration).Assembly);

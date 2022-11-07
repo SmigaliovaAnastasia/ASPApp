@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ASPApp.Migrations
 {
-    [DbContext(typeof(GameContext))]
+    [DbContext(typeof(ApplicationContext))]
     [Migration("20221102093951_FixingPlayingTime")]
     partial class FixingPlayingTime
     {

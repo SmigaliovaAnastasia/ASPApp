@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System.Security.Policy;
-using ASPApp.Common.Dtos;
 using ASPApp.Domain.Entities;
 using ASPApp.Common.Dtos.GameDtos;
 
@@ -13,7 +12,8 @@ namespace ASPApp.Bll.Mappings
             CreateMap<Game, GameDto>()
                 .ForMember(x => x.ComplexityLevelDto, y => y.MapFrom(z => z.ComplexityLevel))
                 .ForMember(x => x.GameSeriesDto, y => y.MapFrom(z => z.GameSeries))
-                .ForMember(x => x.GenreDtos, y => y.MapFrom(z => z.Genres));
+                .ForMember(x => x.GenreDtos, y => y.MapFrom(z => z.Genres))
+                .ForMember(x => x.ReviewIds, y => y.MapFrom(z => z.Reviews.Select(r => r.Id)));
             CreateMap<GameUpdateDto, Game>();
             CreateMap<Game, GameListDto>()
                 .ForMember(x => x.ComplexityLevelName, y => y.MapFrom(z => z.ComplexityLevel.Name))
@@ -21,7 +21,6 @@ namespace ASPApp.Bll.Mappings
 
             CreateMap<GameSeries, GameSeriesDto>();
             CreateMap<Genre, GenreDto>();
-            CreateMap<GenreDto, Genre>();
             CreateMap<ComplexityLevel, ComplexityLevelDto>();
         }
     }

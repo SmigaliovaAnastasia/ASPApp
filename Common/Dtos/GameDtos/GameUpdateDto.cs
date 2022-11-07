@@ -9,7 +9,6 @@ namespace ASPApp.Common.Dtos.GameDtos
         [Required]
         [StringLength(200, MinimumLength = 3, ErrorMessage = "The Name field should contain 3-200 symbols")]
         public string Name { get; set; }
-
         [StringLength(1000)]
         public string? Description { get; set; }
         [StringLength(1000)]

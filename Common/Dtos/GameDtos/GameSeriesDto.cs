@@ -1,4 +1,4 @@
-﻿namespace ASPApp.Common.Dtos
+﻿namespace ASPApp.Common.Dtos.GameDtos
 {
     public class GameSeriesDto
     {
