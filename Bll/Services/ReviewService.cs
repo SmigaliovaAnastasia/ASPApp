@@ -22,9 +22,9 @@ namespace ASPApp.Bll.Services
             _mapper = mapper;
         }
 
-        public async Task<ReviewDto> CreateReviewAsync(ReviewUpdateDto reviewUpdateDto)
+        public async Task<ReviewDto> CreateReviewAsync(ReviewCreateDto reviewCreateDto)
         {
-            var review = _mapper.Map<Review>(reviewUpdateDto);
+            var review = _mapper.Map<Review>(reviewCreateDto);
             var existanceCheck = await _repository.GetWithFiltersAsync(e =>
                 e.GameId == review.GameId &&
                 e.ApplicationUserId == review.ApplicationUserId);

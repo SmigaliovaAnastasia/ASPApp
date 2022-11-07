@@ -1,67 +1,65 @@
 ﻿using ASPApp.Bll.Interfaces;
 using ASPApp.Common.Dtos.CollectionDtos;
-using ASPApp.Common.Dtos.GameDtos;
 using ASPApp.Common.Dtos.ReviewDtos;
 using ASPApp.Common.Exceptions;
 using ASPApp.Common.Models.Pagination.PagedRequests;
-using ASPApp.Domain.Entities.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using System.Security.Claims;
 
 namespace ASPApp.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReviewsController : ControllerBase
+    public class CollectionsController : ControllerBase
     {
-        private readonly IReviewService _reviewService;
-        public ReviewsController(IReviewService reviewService)
+        private readonly ICollectionService _collectionService;
+        public CollectionsController(ICollectionService collectionService)
         {
-            _reviewService = reviewService;
+            _collectionService = collectionService;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         [ApiExceptionFilter]
         public async Task<IActionResult> Get(Guid id)
         {
-            return Ok(await _reviewService.GetReviewAsync(id));
+            return Ok(await _collectionService.GetCollectionAsync(id));
         }
 
         [Authorize]
         [HttpPost]
         [ApiExceptionFilter]
-        public async Task<IActionResult> Post([FromBody] ReviewCreateDto reviewCreateDto)
+        public async Task<IActionResult> Post([FromBody] CollectionCreateDto collectionCreateDto)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == reviewCreateDto.ApplicationUserId.ToString())
+            if (userId == collectionCreateDto.ApplicationUserId.ToString())
             {
-                var review = await _reviewService.CreateReviewAsync(reviewCreateDto);
-                return CreatedAtAction(nameof(Get), new { id = review.Id }, review);
+                var collection = await _collectionService.CreateCollectionAsync(collectionCreateDto);
+                return CreatedAtAction(nameof(Get), new { id = collection.Id }, collection);
             }
             else
             {
-                return BadRequest("Users can not create reviews for other users");
+                return BadRequest("Users can not create collections for other users");
             }
         }
 
         [HttpPost("paginated")]
         [ApiExceptionFilter]
-        public async Task<IActionResult> GetPaged([FromBody] ReviewPagedRequest request)
+        public async Task<IActionResult> GetPaged([FromBody] CollectionPagedRequest request)
         {
-            return Ok(await _reviewService.GetPagedReviewsAsync(request));
+            return Ok(await _collectionService.GetPagedCollectionsAsync(request));
         }
 
         [Authorize]
         [HttpPut("{id}")]
         [ApiExceptionFilter]
-        public async Task<IActionResult> Put(Guid id, [FromBody] ReviewUpdateDto reviewUpdateDto)
+        public async Task<IActionResult> Put(Guid id, [FromBody] CollectionUpdateDto collectionUpdateDto)
         {
             if (await CheckUserAccess(id))
             {
-                await _reviewService.UpdateReviewAsync(id, reviewUpdateDto);
+                await _collectionService.UpdateCollectionAsync(id, collectionUpdateDto);
                 return Ok();
             }
             return BadRequest("Access denied");
@@ -74,17 +72,17 @@ namespace ASPApp.WebAPI.Controllers
         {
             if (await CheckUserAccess(id))
             {
-                await _reviewService.DeleteReviewAsync(id);
+                await _collectionService.DeleteCollectionAsync(id);
                 return NoContent();
             }
             return BadRequest("Access denied");
         }
 
-        private async Task<bool> CheckUserAccess(Guid reviewId)
+        private async Task<bool> CheckUserAccess(Guid collectionId)
         {
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var review = await _reviewService.GetReviewAsync(reviewId);
-            if(review.ApplicationUserId.ToString() == userId)
+            var collection = await _collectionService.GetCollectionAsync(collectionId);
+            if (collection.ApplicationUserId.ToString() == userId)
             {
                 return true;
             }
@@ -92,3 +90,4 @@ namespace ASPApp.WebAPI.Controllers
         }
     }
 }
+

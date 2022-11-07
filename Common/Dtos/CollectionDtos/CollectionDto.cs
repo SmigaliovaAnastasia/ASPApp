@@ -9,6 +9,8 @@ namespace ASPApp.Common.Dtos.CollectionDtos
         public string Name { get; set; }
         public string? Description { get; set; }
         public string? ImgImageUrl { get; set; }
+        public int GamesNumber { get; set; } 
+        public int FavouriteGamesNumber { get; set; }
         public Guid ApplicationUserId { get; set; }
         public ICollection<Guid> CollectionGameIds { get; set; }
     }

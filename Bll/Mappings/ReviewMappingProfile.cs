@@ -12,6 +12,7 @@ namespace ASPApp.Bll.Mappings
             CreateMap<Review, ReviewDto>()
                 .ForMember(x => x.UserName, y => y.MapFrom(z => z.ApplicationUser.UserName))
                 .ForMember(x => x.UserImageUrl, y => y.MapFrom(z => z.ApplicationUser.ImageUrl));
+            CreateMap<ReviewCreateDto, Review>();
             CreateMap<ReviewUpdateDto, Review>();
         }
     }

@@ -2,7 +2,7 @@
 
 namespace ASPApp.Common.Dtos.CollectionDtos
 {
-    public class CollectionUpdateDto
+    public class CollectionCreateDto
     {
         [Required]
         [StringLength(200, MinimumLength = 1, ErrorMessage = "The Name field should contain 1-200 symbols")]
@@ -10,5 +10,7 @@ namespace ASPApp.Common.Dtos.CollectionDtos
         [StringLength(1000)]
         public string? Description { get; set; }
         public string? ImgImageUrl { get; set; }
+        [Required]
+        public Guid ApplicationUserId { get; set; }
     }
 }

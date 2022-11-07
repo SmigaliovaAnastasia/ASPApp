@@ -11,7 +11,7 @@ namespace ASPApp.Bll.Interfaces
 
         Task<ReviewDto> GetReviewAsync(Guid id);
 
-        Task<ReviewDto> CreateReviewAsync(ReviewUpdateDto reviewUpdateDto);
+        Task<ReviewDto> CreateReviewAsync(ReviewCreateDto reviewUpdateDto);
 
         Task UpdateReviewAsync(Guid id, ReviewUpdateDto reviewUpdateDto);
 

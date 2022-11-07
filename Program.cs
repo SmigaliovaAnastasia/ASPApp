@@ -88,6 +88,7 @@ public class Program
         builder.Services.AddScoped<DbContext, ApplicationContext>();
         builder.Services.AddScoped(typeof(IGameRepository<Game>), typeof(GameRepository));
         builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+        builder.Services.AddScoped<ICollectionService, CollectionService>();
         builder.Services.AddScoped<IGameService, GameService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddControllers().AddNewtonsoftJson();
