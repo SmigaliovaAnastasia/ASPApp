@@ -91,6 +91,7 @@ public class Program
         builder.Services.AddScoped<ICollectionService, CollectionService>();
         builder.Services.AddScoped<IGameService, GameService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
+        builder.Services.AddScoped<ICollectionGameService, CollectionGameService>();
         builder.Services.AddControllers().AddNewtonsoftJson();
 
         var app = builder.Build();

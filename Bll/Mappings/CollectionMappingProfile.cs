@@ -9,7 +9,6 @@ namespace ASPApp.Bll.Mappings
         public CollectionMappingProfile()
         {
             CreateMap<Collection, CollectionDto>()
-                .ForMember(x => x.CollectionGameIds, y => y.MapFrom(z => z.CollectionGames.Select(c => c.Id)))
                 .ForMember(x => x.GamesNumber, y => y.MapFrom(z => z.CollectionGames.Count()))
                 .ForMember(x => x.FavouriteGamesNumber, y => y.MapFrom(z => z.CollectionGames.Select(c => c.IsFavourite == true).Count()));
             CreateMap<CollectionCreateDto, Collection>();

@@ -35,7 +35,7 @@ namespace ASPApp.WebAPI.Controllers
         [ApiExceptionFilter]
         public async Task<IActionResult> Post([FromBody] ReviewCreateDto reviewCreateDto)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == reviewCreateDto.ApplicationUserId.ToString())
             {
                 var review = await _reviewService.CreateReviewAsync(reviewCreateDto);
@@ -82,7 +82,7 @@ namespace ASPApp.WebAPI.Controllers
 
         private async Task<bool> CheckUserAccess(Guid reviewId)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var review = await _reviewService.GetReviewAsync(reviewId);
             if(review.ApplicationUserId.ToString() == userId)
             {

@@ -12,6 +12,5 @@ namespace ASPApp.Common.Dtos.CollectionDtos
         public int GamesNumber { get; set; } 
         public int FavouriteGamesNumber { get; set; }
         public Guid ApplicationUserId { get; set; }
-        public ICollection<Guid> CollectionGameIds { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using ASPApp.Common.Models.Pagination.PagedRequests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace ASPApp.WebAPI.Controllers
@@ -25,7 +26,12 @@ namespace ASPApp.WebAPI.Controllers
         [ApiExceptionFilter]
         public async Task<IActionResult> Get(Guid id)
         {
-            return Ok(await _collectionService.GetCollectionAsync(id));
+            var collection = await _collectionService.GetCollectionAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (collection.ApplicationUserId.ToString() == userId)
+                return Ok(collection);
+            else
+                return BadRequest("Users can not read collections of other users");
         }
 
         [Authorize]
@@ -33,7 +39,7 @@ namespace ASPApp.WebAPI.Controllers
         [ApiExceptionFilter]
         public async Task<IActionResult> Post([FromBody] CollectionCreateDto collectionCreateDto)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == collectionCreateDto.ApplicationUserId.ToString())
             {
                 var collection = await _collectionService.CreateCollectionAsync(collectionCreateDto);
@@ -49,7 +55,11 @@ namespace ASPApp.WebAPI.Controllers
         [ApiExceptionFilter]
         public async Task<IActionResult> GetPaged([FromBody] CollectionPagedRequest request)
         {
-            return Ok(await _collectionService.GetPagedCollectionsAsync(request));
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (request.HasAccess(userId))
+                return Ok(await _collectionService.GetPagedCollectionsAsync(request));
+            else
+                return BadRequest("Users can not read collections of other users");
         }
 
         [Authorize]
@@ -80,7 +90,7 @@ namespace ASPApp.WebAPI.Controllers
 
         private async Task<bool> CheckUserAccess(Guid collectionId)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var collection = await _collectionService.GetCollectionAsync(collectionId);
             if (collection.ApplicationUserId.ToString() == userId)
             {

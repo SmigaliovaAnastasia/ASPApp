@@ -16,6 +16,7 @@ namespace ASPApp.Common.Dtos.GameDtos
         public int maxPlayingTimeMinutes { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string? ImageUrl { get; set; }
+        public double? Rating { get; set; }
         public ICollection<GenreDto> GenreDtos { get; set; }
         public GameSeriesDto GameSeriesDto { get; set; }
         public ComplexityLevelDto ComplexityLevelDto { get; set; }

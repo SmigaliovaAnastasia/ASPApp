@@ -9,8 +9,10 @@ namespace ASPApp.Bll.Mappings
         public CollectionGameMappingProfile()
         {
             CreateMap<CollectionGame, CollectionGameDto>()
-                .ForMember(x => x.GameDto, y => y.MapFrom(z => z.Game));
-            CreateMap<CollectionGame, CollectionGameDto>();
+                .ForMember(x => x.GameName, y => y.MapFrom(z => z.Game.Name))
+                .ForMember(x => x.GameImageUrl, y => y.MapFrom(z => z.Game.ImageUrl));
+            CreateMap<CollectionGameCreateDto, CollectionGame>();
+            CreateMap<CollectionGameUpdateDto, CollectionGame>();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace ASPApp.Bll.Mappings
                 .ForMember(x => x.ComplexityLevelDto, y => y.MapFrom(z => z.ComplexityLevel))
                 .ForMember(x => x.GameSeriesDto, y => y.MapFrom(z => z.GameSeries))
                 .ForMember(x => x.GenreDtos, y => y.MapFrom(z => z.Genres))
+                .ForMember(x => x.Rating, y => y.MapFrom(z => z.Reviews.Average(r => r.Rating)))
                 .ForMember(x => x.ReviewIds, y => y.MapFrom(z => z.Reviews.Select(r => r.Id)));
             CreateMap<GameUpdateDto, Game>();
             CreateMap<Game, GameListDto>()

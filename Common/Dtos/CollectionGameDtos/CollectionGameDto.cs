@@ -8,6 +8,8 @@ namespace ASPApp.Common.Dtos.CollectionGameDtos
         public Guid Id { get; set; }
         public bool IsFavourite { get; set; }
         public Guid GameId { get; set; }
-        public GameDto GameDto { get; set; }
+        public string GameName { get; set; }
+        public string GameImageUrl { get; set; }
+        public Guid CollectionId { get; set; }
     }
 }
