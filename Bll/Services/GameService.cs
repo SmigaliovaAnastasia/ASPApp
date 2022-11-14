@@ -52,7 +52,7 @@ namespace ASPApp.Bll.Services
 
         public async Task<IEnumerable<GameListDto>> GetAllGamesAsync()
         {
-            var games = await _repository.GetAllWithIncludeAsync(g => g.ComplexityLevel, g => g.Genres);
+            var games = await _repository.GetAllWithIncludeAsync(g => g.ComplexityLevel, g => g.Genres, g => g.Reviews);
             if (games == null || games.Count() == 0)
             {
                 throw new EntryNotFoundException("No games found.");
@@ -63,12 +63,12 @@ namespace ASPApp.Bll.Services
 
         public async Task<PagedResult<GameListDto>> GetPagedGamesAsync(PagedRequest<Game> request)
         {
-            return await _repository.GetPagedResultAsync<GameListDto>(request, _mapper, g => g.Genres, g => g.ComplexityLevel, g => g.GameSeries);
+            return await _repository.GetPagedResultAsync<GameListDto>(request, _mapper, g => g.Genres, g => g.ComplexityLevel, g => g.Reviews);
         }
 
         public async Task<GameDto> GetGameAsync(Guid id)
         {
-            var game = await _repository.GetByIdWithIncludeAsync(id, g => g.ComplexityLevel, g => g.Genres, g => g.GameSeries);
+            var game = await _repository.GetByIdWithIncludeAsync(id, g => g.ComplexityLevel, g => g.Genres, g => g.GameSeries, g => g.Reviews);
             if(game == null)
             {
                 throw new EntryNotFoundException("The game you are requesting doesn't exist");

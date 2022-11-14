@@ -13,6 +13,7 @@ namespace ASPApp.Common.Dtos.GameDtos
         public int minPlayingTimeMinutes { get; set; }
         public int maxPlayingTimeMinutes { get; set; }
         public string? ImageUrl { get; set; }
+        public double? Rating { get; set; }
         public ICollection<string> Genres { get; set; }
         public string ComplexityLevelName { get; set; }
     }
