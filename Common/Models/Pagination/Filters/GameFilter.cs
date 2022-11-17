@@ -11,6 +11,7 @@ namespace ASPApp.Common.Models.Pagination.Filters
             "age" => FilterOperator switch
             {
                 '>' => query.Where(g => g.MinPalyerAge > int.Parse(Value)),
+                '<' => query.Where(g => g.MinPalyerAge < int.Parse(Value)),
                 _ => throw new ArgumentException()
             },
             "playingtime" => FilterOperator switch
