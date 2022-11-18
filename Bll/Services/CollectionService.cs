@@ -56,7 +56,7 @@ namespace ASPApp.Bll.Services
 
         public async Task<CollectionDto> GetCollectionAsync(Guid id)
         {
-            var collection = await _repository.GetByIdWithIncludeAsync(id, e => e.ApplicationUserId, e => e.CollectionGames);
+            var collection = await _repository.GetByIdWithIncludeAsync(id, e => e.ApplicationUser, e => e.CollectionGames);
             if (collection == null)
             {
                 throw new EntryNotFoundException("The collection you are requesting doesn't exist");

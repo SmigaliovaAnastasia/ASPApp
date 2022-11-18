@@ -2,6 +2,8 @@
 using ASPApp.Common.Dtos.CollectionDtos;
 using ASPApp.Common.Dtos.ReviewDtos;
 using ASPApp.Common.Exceptions;
+using ASPApp.Common.Models.Pagination;
+using ASPApp.Common.Models.Pagination.Filters;
 using ASPApp.Common.Models.Pagination.PagedRequests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -56,10 +58,8 @@ namespace ASPApp.WebAPI.Controllers
         public async Task<IActionResult> GetPaged([FromBody] CollectionPagedRequest request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (request.HasAccess(userId))
-                return Ok(await _collectionService.GetPagedCollectionsAsync(request));
-            else
-                return BadRequest("Users can not read collections of other users");
+            request.SetApplicationUserFilter(userId);
+            return Ok(await _collectionService.GetPagedCollectionsAsync(request));
         }
 
         [Authorize]
@@ -83,7 +83,7 @@ namespace ASPApp.WebAPI.Controllers
             if (await CheckUserAccess(id))
             {
                 await _collectionService.DeleteCollectionAsync(id);
-                return NoContent();
+                return Ok("Success");
             }
             return BadRequest("Access denied");
         }
@@ -92,7 +92,7 @@ namespace ASPApp.WebAPI.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var collection = await _collectionService.GetCollectionAsync(collectionId);
-            if (collection.ApplicationUserId.ToString() == userId)
+            if (collection.ApplicationUserId.ToString().ToLower() == userId)
             {
                 return true;
             }

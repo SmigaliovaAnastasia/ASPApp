@@ -9,6 +9,6 @@ namespace ASPApp.Common.Dtos.CollectionDtos
         public string Name { get; set; }
         [StringLength(1000)]
         public string? Description { get; set; }
-        public string? ImgImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

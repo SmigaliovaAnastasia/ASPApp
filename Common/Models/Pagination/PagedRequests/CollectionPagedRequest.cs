@@ -31,5 +31,21 @@ namespace ASPApp.Common.Models.Pagination.PagedRequests
                 return false;
             }
         }
+
+        public void SetApplicationUserFilter(string applicationUserId)
+        {
+            var existanceCheck = Filters.Where(f => f.FilterProperty == "application_user_id");
+            if(existanceCheck != null)
+            {
+                Filters = Filters.Except(existanceCheck);
+            }
+
+            Filters = Filters.Append(new CollectionFilter
+            {
+                FilterProperty = "application_user_id",
+                FilterOperator = null,
+                Value = applicationUserId
+            }); 
+        }
     }
 }
