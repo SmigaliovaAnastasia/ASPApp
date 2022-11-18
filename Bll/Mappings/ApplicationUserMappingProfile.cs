@@ -12,6 +12,7 @@ namespace ASPApp.Bll.Mappings
         {
             CreateMap<ApplicationUserLoginDto, ApplicationUser>();
             CreateMap<ApplicationUserRegisterDto, ApplicationUser>();
+            CreateMap<ApplicationUser, ApplicationUserDto>();
         }
     }
 }

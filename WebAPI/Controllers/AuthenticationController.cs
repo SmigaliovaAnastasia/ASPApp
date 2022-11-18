@@ -100,17 +100,19 @@ namespace ASPApp.WebAPI.Controllers
             {
                 return BadRequest("Access denied");
             }
+
             var userExists = await _userManager.FindByIdAsync(id.ToString());
             if (userExists == null)
                 return BadRequest("User not found");
 
             userExists = _mapper.Map(userDto, userExists);
             var result = await _userManager.UpdateAsync(userExists);
+
             if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
-            return Ok();
+            return Ok("User updated");
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)
