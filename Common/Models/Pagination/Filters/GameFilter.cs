@@ -27,6 +27,7 @@ namespace ASPApp.Common.Models.Pagination.Filters
                 _ => throw new ArgumentException()
             },
             "genres" => query.Where(g => g.Genres.Any(e => e.Name.Equals(Value))),
+            "!collection_id" => query.Where(g => g.CollectionGames.All(c => c.CollectionId.ToString() != Value)),
             _ => throw new ArgumentException(),
         };
     }

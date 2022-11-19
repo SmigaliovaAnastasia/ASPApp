@@ -63,7 +63,7 @@ namespace ASPApp.Bll.Services
 
         public async Task<PagedResult<GameListDto>> GetPagedGamesAsync(PagedRequest<Game> request)
         {
-            return await _repository.GetPagedResultAsync<GameListDto>(request, _mapper, g => g.Genres, g => g.ComplexityLevel, g => g.Reviews);
+            return await _repository.GetPagedResultAsync<GameListDto>(request, _mapper, g => g.Genres, g => g.ComplexityLevel, g => g.Reviews, g=> g.CollectionGames);
         }
 
         public async Task<GameDto> GetGameAsync(Guid id)
