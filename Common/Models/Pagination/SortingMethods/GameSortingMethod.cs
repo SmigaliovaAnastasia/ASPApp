@@ -11,6 +11,8 @@ namespace ASPApp.Common.Models.Pagination.SortingMethods
             "name_desc" => query.OrderByDescending(g => g.Name),
             "releasedate_asc" => query.OrderBy(g => g.ReleaseDate),
             "releasedate_desc" => query.OrderByDescending(g => g.ReleaseDate),
+            "rating_asc" => query.OrderBy(g => g.Reviews.Select(r => r.Rating).Average()),
+            "rating_desc" => query.OrderByDescending(g => g.Reviews.Select(r => r.Rating).Average()),
             _ => throw new ArgumentException(),
         };
     }

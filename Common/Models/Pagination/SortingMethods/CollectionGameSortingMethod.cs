@@ -11,6 +11,8 @@ namespace ASPApp.Common.Models.Pagination.SortingMethods
             "name_desc" => query.OrderByDescending(g => g.Game.Name),
             "releasedate_asc" => query.OrderBy(g => g.Game.ReleaseDate),
             "releasedate_desc" => query.OrderByDescending(g => g.Game.ReleaseDate),
+            "rating_asc" => query.OrderBy(g => g.Game.Reviews.Select(r => r.Rating).Average()),
+            "rating_desc" => query.OrderByDescending(g => g.Game.Reviews.Select(r => r.Rating).Average()),
             _ => throw new ArgumentException(),
         };
     }
