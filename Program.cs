@@ -92,6 +92,8 @@ public class Program
         builder.Services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
         builder.Services.AddScoped<ICollectionService, CollectionService>();
         builder.Services.AddScoped<IGameService, GameService>();
+        builder.Services.AddScoped<IGenreService, GenreService>();
+        builder.Services.AddScoped<IComplexityLevelService, ComplexityLevelService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<ICollectionGameService, CollectionGameService>();
         builder.Services.AddControllers().AddNewtonsoftJson();
