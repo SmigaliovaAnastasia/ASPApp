@@ -10,7 +10,7 @@ namespace ASPApp.Bll.Mappings
         {
             CreateMap<Collection, CollectionDto>()
                 .ForMember(x => x.GamesNumber, y => y.MapFrom(z => z.CollectionGames.Count()))
-                .ForMember(x => x.FavouriteGamesNumber, y => y.MapFrom(z => z.CollectionGames.Select(c => c.IsFavourite == true).Count()));
+                .ForMember(x => x.FavouriteGamesNumber, y => y.MapFrom(z => z.CollectionGames.Where(c => c.IsFavourite == true).Count()));
             CreateMap<CollectionCreateDto, Collection>();
             CreateMap<CollectionUpdateDto, Collection>();
         }

@@ -37,6 +37,7 @@ namespace ASPApp.WebAPI.Controllers
             return CreatedAtAction(nameof(Get), new { id = collectionGame.Id }, collectionGame);
         }
 
+        [Authorize]
         [HttpPost("paginated")]
         [ApiExceptionFilter]
         public async Task<IActionResult> GetPaged([FromBody] CollectionGamePagedRequest request)

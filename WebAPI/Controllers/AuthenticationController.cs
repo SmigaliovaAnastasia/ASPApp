@@ -91,30 +91,6 @@ namespace ASPApp.WebAPI.Controllers
             return Ok("User Created");
         }
 
-        [Authorize]
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Guid id, [FromBody]ApplicationUserRegisterDto userDto)
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(userId != id.ToString())
-            {
-                return BadRequest("Access denied");
-            }
-
-            var userExists = await _userManager.FindByIdAsync(id.ToString());
-            if (userExists == null)
-                return BadRequest("User not found");
-
-            userExists = _mapper.Map(userDto, userExists);
-            var result = await _userManager.UpdateAsync(userExists);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors);
-            }
-            return Ok("User updated");
-        }
-
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:securityKey"]));
@@ -122,7 +98,7 @@ namespace ASPApp.WebAPI.Controllers
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
+                expires: DateTime.Now.AddMinutes(60),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );
