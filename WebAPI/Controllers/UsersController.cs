@@ -48,11 +48,7 @@ namespace ASPApp.WebAPI.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var userDto = _mapper.Map<ApplicationUserDto>(user);
-                return Ok(new
-                {
-                    userDto,
-                    userRoles
-                });
+                return Ok(userDto);
             }
         }
 
