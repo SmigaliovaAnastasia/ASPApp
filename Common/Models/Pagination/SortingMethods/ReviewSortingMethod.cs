@@ -4,14 +4,22 @@ namespace ASPApp.Common.Models.Pagination.SortingMethods
 {
     public class ReviewSortingMethod : SortingMethod<Review>
     {
-        public override IQueryable<Review> ApplySorting(IQueryable<Review> query) => Value switch
+        public override IQueryable<Review> ApplySorting(IQueryable<Review> query) => SortingColumn switch
         {
             "id" => query.OrderBy(r => r.Id),
-            "username_asc" => query.OrderBy(r => r.ApplicationUser.UserName),
-            "username_desc" => query.OrderByDescending(r => r.ApplicationUser.UserName),
-            "rating_asc" => query.OrderBy(r => r.Rating),
-            "rating_desc" => query.OrderByDescending(r => r.Rating),
+            "userName" => Direction switch
+            {
+                "asc" => query.OrderBy(r => r.ApplicationUser.UserName),
+                "desc" => query.OrderByDescending(r => r.ApplicationUser.UserName),
+                _ => throw new ArgumentException(),
+            },
+            "rating" => Direction switch
+            {
+                "asc" => query.OrderBy(r => r.Rating),
+                "desc" => query.OrderByDescending(r => r.Rating),
+                _ => throw new ArgumentException(),
+            },
             _ => throw new ArgumentException(),
-        };
+        }; 
     }
 }

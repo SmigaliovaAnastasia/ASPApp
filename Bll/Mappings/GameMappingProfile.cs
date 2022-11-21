@@ -18,7 +18,7 @@ namespace ASPApp.Bll.Mappings
             CreateMap<GameUpdateDto, Game>();
             CreateMap<Game, GameListDto>()
                 .ForMember(x => x.ComplexityLevelName, y => y.MapFrom(z => z.ComplexityLevel.Name))
-                .ForMember(x => x.Rating, y => y.MapFrom(z => z.Reviews.Count > 0 ? z.Reviews.Average(r => r.Rating) : 0))
+                .ForMember(x => x.Rating, y => y.MapFrom(z => z.Reviews.Count > 0 ? Math.Round(z.Reviews.Average(r => r.Rating), 2) : 0))
                 .ForMember(x => x.Genres, y => y.MapFrom(z => z.Genres.Select(g => g.Name)));
 
             CreateMap<GameSeries, GameSeriesDto>();

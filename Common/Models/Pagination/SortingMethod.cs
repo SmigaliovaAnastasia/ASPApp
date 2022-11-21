@@ -2,7 +2,8 @@
 {
     public abstract class SortingMethod<T>
     {
-        public string Value { get; set; }
+        public string SortingColumn { get; set; }
+        public string? Direction { get; set; }
 
         public SortingMethod() { }
         public abstract IQueryable<T> ApplySorting(IQueryable<T> query);
